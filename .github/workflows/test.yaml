@@ -13,8 +13,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
+          python-version: 3.13
       - uses: pre-commit/action@v3.0.1
+      # Run linter that is set to skip in .pre-commit-config.yaml
+      - uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: cfn-python-lint --all-files
 
   pytest:
     runs-on: ubuntu-latest
@@ -23,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.12
+          python-version: 3.13
       - run: pip install -U pipenv
       - run: pipenv sync --dev
       - run: pipenv run coverage run -m pytest tests/ -svv
@@ -40,3 +44,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/sam-build
       - run: sam validate --lint --template .aws-sam/build/template.yaml
+
